@@ -1,58 +1,58 @@
 import java.util.*;
-
+ 
 public class Graph {
-	private Queue<Integer>[] Q; // Á¤Á¡ iÀÇ Á÷¼ÓÈÄ¼ÓÀÚ¸¦ ÀúÀåÇÏ´Â Å¥
-	private Queue<Integer> ZeroPredQ; // ¼±ÇàÀÚ°¡ ¾ø´Â Á¤Á¡µéÀ» ÀúÀåÇÏ´Â Å¥
-	private LinkedList<Integer> sortedList; // À§»ó Á¤·Ä °á°ú¸¦ º¸°üÇÏ´Â ¸®½ºÆ®
+	private Queue<Integer>[] Q; // ì •ì  iì˜ ì§ì†í›„ì†ìë¥¼ ì €ì¥í•˜ëŠ” í
+	private Queue<Integer> ZeroPredQ; // ì„ í–‰ìê°€ ì—†ëŠ” ì •ì ë“¤ì„ ì €ì¥í•˜ëŠ” í
+	private LinkedList<Integer> sortedList; // ìœ„ìƒ ì •ë ¬ ê²°ê³¼ë¥¼ ë³´ê´€í•˜ëŠ” ë¦¬ìŠ¤íŠ¸
 
-	private int[] indegree; // Á¤Á¡ÀÇ ÁøÀÔÂ÷¼ö¸¦ ÀúÀåÇÏ´Â ¹è¿­
-	private int n; // Á¤Á¡ ¼ö
+	private int[] indegree; // ì •ì ì˜ ì§„ì…ì°¨ìˆ˜ë¥¼ ì €ì¥í•˜ëŠ” ë°°ì—´
+	private int n; // ì •ì  ìˆ˜
 
-	public Graph(int vertex) { // »ı¼ºÀÚ
-		n = vertex; // Á¤Á¡ ¼ö
-		Q = new Queue[n]; // Á¤Á¡ ¼ö ¸¸Å­ Å¥ ¹è¿­ »ı¼º
+	public Graph(int vertex) { // ìƒì„±ì
+		n = vertex; // ì •ì  ìˆ˜
+		Q = new Queue[n]; // ì •ì  ìˆ˜ ë§Œí¼ í ë°°ì—´ ìƒì„±
 		ZeroPredQ = new LinkedList<Integer>();
 		sortedList = new LinkedList<Integer>();
 
 		for (int i = 0; i < n; i++) {
-			Q[i] = new LinkedList<Integer>(); // °¢ Q[i]¿¡ ´ëÇØ ÃÊ±âÈ­
+			Q[i] = new LinkedList<Integer>(); // ê° Q[i]ì— ëŒ€í•´ ì´ˆê¸°í™”
 		}
 		indegree = new int[n];
 	}
 
 	public void insertEdge(int head, int tail) {
-		Q[head].add(tail); // Q¿¡ °ª »ğÀÔ
-		indegree[tail]++; // ÁøÀÔÂ÷¼ö Áõ°¡
+		Q[head].add(tail); // Qì— ê°’ ì‚½ì…
+		indegree[tail]++; // ì§„ì…ì°¨ìˆ˜ ì¦ê°€
 	}
 
-	// À§»ó Á¤·Ä ¾Ë°í¸®Áò
+	// ìœ„ìƒ ì •ë ¬ ì•Œê³ ë¦¬ì¦˜
 	public void topologicalSort() {
 		int i, v, successor;
 		for (i = 0; i < n; i++) {
-			if (indegree[i] == 0) // ¼±ÇàÀÚ°¡ ¾ø´Â °æ¿ì
-				ZeroPredQ.add(i); // i¸¦ »ğÀÔÇÏ¿© ÁÜ
+			if (indegree[i] == 0) // ì„ í–‰ìê°€ ì—†ëŠ” ê²½ìš°
+				ZeroPredQ.add(i); // ië¥¼ ì‚½ì…í•˜ì—¬ ì¤Œ
 		}
 
-		if (ZeroPredQ.isEmpty()) { // °ø¹éÀÌ¸é ½ÎÀÌÅ¬ÀÌ Á¸ÀçÇÑ´Ù´Â ¶æÀÓ.
+		if (ZeroPredQ.isEmpty()) { // ê³µë°±ì´ë©´ ì‹¸ì´í´ì´ ì¡´ì¬í•œë‹¤ëŠ” ëœ»ì„.
 			System.out.println("network has a cycle"); 
 			return;
 		}
 
 		while (!ZeroPredQ.isEmpty()) {
-			v = ZeroPredQ.remove(); // ¼±ÇàÀÚ°¡ ¾ø´Â Á¤Á¡ ¼±ÅÃÇÏ¿© Á¦°Å
-			sortedList.add(v); // ÁøÀÔÂ÷¼ö°¡ 0ÀÎ Á¤Á¡µéÀ» Á¤·ÄµÈ °á°ú ¸®½ºÆ®¿¡ »ğÀÔ
-			if (Q[v].isEmpty()) // Á¤Á¡ vÀÇ ÈÄ¼ÓÀÚ°¡ ¾øÀ¸¸é 
-				continue; // ¹ÛÀÇ while ·çÇÁ·Î
-			else // ÈÄ¼ÓÀÚ°¡ ÀÖÀ¸¸é
-				successor = Q[v].remove(); // ±× ÈÄ¼ÓÀÚ¸¦ successor·Î ¼³Á¤
-			while (true) { // ÁøÀÔÂ÷¼ö¿Í Á¤Á¡À» ¸ğµÎ Á¦°ÅÇÏ´Â ¹İº¹¹®
-				indegree[successor]--; // ÈÄ¼ÓÀÚÀÇ ÁøÀÔÂ÷¼ö 1°¨¼Ò 
-				if (indegree[successor] == 0) // Á¦°ÅÇÏ´Ùº¸¸é Â÷¼ö°¡ 0ÀÌ µÊ -> Áï ¼±ÇàÀÚ°¡ ¾øÀ½
-					ZeroPredQ.add(successor); // ¼±ÇàÀÚ°¡ ¾øÀ¸¸é »ğÀÔ
-				if (!Q[v].isEmpty()) // Á¤Á¡ÀÌ ³²¾ÆÀÖ´Ù¸é
-					successor = Q[v].remove(); // ´Ù½Ã Á¦°Å
+			v = ZeroPredQ.remove(); // ì„ í–‰ìê°€ ì—†ëŠ” ì •ì  ì„ íƒí•˜ì—¬ ì œê±°
+			sortedList.add(v); // ì§„ì…ì°¨ìˆ˜ê°€ 0ì¸ ì •ì ë“¤ì„ ì •ë ¬ëœ ê²°ê³¼ ë¦¬ìŠ¤íŠ¸ì— ì‚½ì…
+			if (Q[v].isEmpty()) // ì •ì  vì˜ í›„ì†ìê°€ ì—†ìœ¼ë©´ 
+				continue; // ë°–ì˜ while ë£¨í”„ë¡œ
+			else // í›„ì†ìê°€ ìˆìœ¼ë©´
+				successor = Q[v].remove(); // ê·¸ í›„ì†ìë¥¼ successorë¡œ ì„¤ì •
+			while (true) { // ì§„ì…ì°¨ìˆ˜ì™€ ì •ì ì„ ëª¨ë‘ ì œê±°í•˜ëŠ” ë°˜ë³µë¬¸
+				indegree[successor]--; // í›„ì†ìì˜ ì§„ì…ì°¨ìˆ˜ 1ê°ì†Œ 
+				if (indegree[successor] == 0) // ì œê±°í•˜ë‹¤ë³´ë©´ ì°¨ìˆ˜ê°€ 0ì´ ë¨ -> ì¦‰ ì„ í–‰ìê°€ ì—†ìŒ
+					ZeroPredQ.add(successor); // ì„ í–‰ìê°€ ì—†ìœ¼ë©´ ì‚½ì…
+				if (!Q[v].isEmpty()) // ì •ì ì´ ë‚¨ì•„ìˆë‹¤ë©´
+					successor = Q[v].remove(); // ë‹¤ì‹œ ì œê±°
 				else
-					break; // ¸ğµÎ »èÁ¦µÇ¾úÀ¸¸é ¹İº¹¹® Á¾·á
+					break; // ëª¨ë‘ ì‚­ì œë˜ì—ˆìœ¼ë©´ ë°˜ë³µë¬¸ ì¢…ë£Œ
 			}
 		}
 
