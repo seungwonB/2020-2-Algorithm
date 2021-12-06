@@ -1,5 +1,5 @@
 
-public class Main {
+public class Main { 
 
 	public static void main(String[] args) {
 		Graph ADV = new Graph(6);
